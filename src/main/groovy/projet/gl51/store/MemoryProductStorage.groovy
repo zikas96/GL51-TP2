@@ -1,31 +1,37 @@
 package projet.gl51.store
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class MemoryProductStorage implements ProductStorage {
 	
 	private List<Product> products = []
 
 	@Override
 	String save(Product p) {
+		p.id = UUID.randomUUID().toString()
 		products.add(p)
 		p.id
 	}
 
 	@Override
 	void update(String id, Product p) {
-		// TODO Auto-generated method stub
-
+		Integer productIndex = products.findIndexOf { it.id == id }
+		if (productIndex == -1) throw new NotExistingProductException()
+		p.id = id;
+		products.set(productIndex, p)
 	}
 
 	@Override
 	Product getByID(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		Product product = products.find { it.id == id }
+		if (product == null) throw new NotExistingProductException()
+		product
 	}
 
 	@Override
 	void delete(String id) {
-		// TODO Auto-generated method stub
-
+	    products.removeIf {it.id==id}
 	}
 
 	@Override
