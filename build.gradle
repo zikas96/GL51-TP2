@@ -1,10 +1,13 @@
 plugins {
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id "com.github.johnrengelman.shadow" version "4.0.2"
+	id "jacoco"
+	id "com.github.kt3k.coveralls" version "2.8.2"
 }
 
 apply plugin:"application"
 apply plugin:"groovy"
+apply plugin:"eclipse"
 
 version "0.1"
 group "projet.gl51"
@@ -29,6 +32,7 @@ dependencies {
     compileOnly "io.micronaut:micronaut-inject-groovy"
     runtime "ch.qos.logback:logback-classic:1.2.3"
     testCompile "io.micronaut:micronaut-inject-groovy"
+	testCompile "io.micronaut.test:micronaut-test-spock:1.0.4"
     testCompile("org.spockframework:spock-core") {
         exclude group: "org.codehaus.groovy", module: "groovy-all"
     }
@@ -44,4 +48,15 @@ mainClassName = "projet.gl51.Application"
 
 tasks.withType(GroovyCompile) {
     groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled = true // coveralls plugin depends on xml format report
+		html.enabled = true
+	}
+}
+
+coveralls {
+	jacocoReportPath 'build/reports/jacoco/test/jacocoTestReport.xml'
 }

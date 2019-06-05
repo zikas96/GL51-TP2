@@ -23,6 +23,6 @@ class StudentControllerSpec extends Specification {
 		
 		then:
 		students.get(0).toString() == "[firstName:Zakaria, lastName:NAJI]"
-		
+		students.get(1).toString() == "[firstName:Omar, lastName:NAJI]"
     }
 }
