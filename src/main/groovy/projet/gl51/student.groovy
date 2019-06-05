@@ -1,6 +1,6 @@
-package projet.gl51;
+package projet.gl51
 
-public class Student {
+class Student {
 	String firstName
 	String lastName
 }

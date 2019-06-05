@@ -10,6 +10,8 @@ class StudentController {
 
     @Get("/")
     List<Student> index() {
-        [new Student(firstName: "Zakaria", lastName: "NAJI")]
+        [
+			new Student(firstName: "Zakaria", lastName: "NAJI")
+		]
     }
 }
