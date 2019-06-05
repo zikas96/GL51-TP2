@@ -15,7 +15,7 @@ import io.micronaut.http.HttpStatus
 
 @Controller("/store/product")
 class ProductController {
-	
+
 	@Inject
 	ProductStorage storage
 
@@ -27,7 +27,7 @@ class ProductController {
     @Get("/{id}")
     HttpResponse<Product> get(String id) {
 		try {
-			HttpResponse.ok(storage.getByID(id))	
+			HttpResponse.ok(storage.getByID(id))
 		}
 		catch(NotExistingProductException e) {
 			HttpResponse.notFound()

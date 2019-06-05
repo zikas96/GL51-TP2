@@ -4,7 +4,7 @@ import javax.inject.Singleton
 
 @Singleton
 class MemoryProductStorage implements ProductStorage {
-	
+
 	private List<Product> products = []
 
 	@Override
