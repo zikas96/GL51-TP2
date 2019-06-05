@@ -1,5 +1,8 @@
 package projet.gl51.store
 
+import javax.inject.Singleton
+
+@Singleton
 interface ProductStorage {
 	/**
      * creates an new product in the store

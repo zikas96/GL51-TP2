@@ -9,13 +9,15 @@ import io.micronaut.http.annotation.Post
 
 import javax.inject.Inject
 
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 
 
 @Controller("/store/product")
 class ProductController {
 	
-	ProductStorage storage = new MemoryProductStorage()
+	@Inject
+	ProductStorage storage
 
     @Get("/")
     List<Product> index() {
@@ -23,12 +25,12 @@ class ProductController {
     }
 
     @Get("/{id}")
-    Product get(String id) {
+    HttpResponse<Product> get(String id) {
 		try {
-			storage.getByID(id)	
+			HttpResponse.ok(storage.getByID(id))	
 		}
 		catch(NotExistingProductException e) {
-			null
+			HttpResponse.notFound()
 		}
     }
 
@@ -41,7 +43,7 @@ class ProductController {
     HttpStatus update(String id, @Body Product p) {
 		try {
 			storage.update(id, p)
-			HttpStatus.OK
+			HttpStatus.NO_CONTENT
 		}
         catch(NotExistingProductException e){
 			HttpStatus.NOT_FOUND
@@ -49,13 +51,8 @@ class ProductController {
     }
 
     @Delete("/{id}")
-    String delete(String id) {
-		try {
-			storage.delete(id)
-			HttpStatus.OK
-		}
-        catch(NotExistingProductException e){
-			HttpStatus.NOT_FOUND
-		}
+    HttpStatus delete(String id) {
+		storage.delete(id)
+		HttpStatus.OK
     }
 }

@@ -1,5 +1,6 @@
 package projet.gl51.store
 
+import io.micronaut.test.annotation.MicronautTest
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.exceptions.HttpClientResponseException
@@ -14,6 +15,7 @@ import spock.lang.Specification
 
 import javax.inject.Inject
 
+@MicronautTest
 class ProductControllerSpec extends Specification {
 
     @Shared @AutoCleanup EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer)
@@ -31,17 +33,17 @@ class ProductControllerSpec extends Specification {
 	void "test create and get"() {
 		setup:
 		Product sentProduct = new Product(name: name, description: description, price: price, idealTemperature: idealTemperature)
-		
-		when:
+
+ 		when:
 		String id = client.toBlocking().retrieve(HttpRequest.POST('/store/product', sentProduct))
 		Product getProduct = client.toBlocking().retrieve(HttpRequest.GET('/store/product/'+id), Argument.of(Product).type)
-		
-		then:
+
+ 		then:
 		id != ""
 		getProduct != null
 		getProduct.equals(sentProduct)
-		
-		where:
+
+ 		where:
 		name | description | price | idealTemperature
 		"Ordi" | "Ordinateur" | 1500 | 10 
 		"Table" | "Grande table" | 2000 | 5 
@@ -57,13 +59,30 @@ class ProductControllerSpec extends Specification {
 		Product afterProduct = client.toBlocking().retrieve(HttpRequest.GET('/store/product/'+id), Argument.of(Product).type)
 		
 		then:
-		status.equals(HttpStatus.OK)
+		status.equals(HttpStatus.NO_CONTENT)
 		newProduct.equals(afterProduct)
 		
 		where:
 		name | description | price | idealTemperature | name1 | description1 | price1| idealTemperature1
 		"Ordi" | "Ordinateur" | 1500 | 10 | "Table" | "Grande table" | 2000 | 5
 		"Table" | "Grande table" | 2000 | 5 | "Ordi" | "Ordinateur" | 1500 | 10
+	}
+	
+	void "test update unexisting product"() {
+		setup:
+		String id = UUID.randomUUID().toString()
+		
+		when:
+		Product newProduct = new Product(name: name, description: description, price: price, idealTemperature: idealTemperature)
+		HttpStatus status = client.toBlocking().retrieve(HttpRequest.PATCH('/store/product/'+id, newProduct), Argument.of(HttpStatus).type)
+		
+		then:
+		thrown HttpClientResponseException
+		
+		where:
+		name | description | price | idealTemperature
+		"Ordi" | "Ordinateur" | 1500 | 10
+		"Table" | "Grande table" | 2000 | 5
 	}
 	
 	void "test delete"() {

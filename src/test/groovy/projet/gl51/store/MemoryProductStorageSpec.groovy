@@ -1,10 +1,14 @@
 package projet.gl51.store
 
+import javax.inject.Inject
+import io.micronaut.test.annotation.MicronautTest
 import spock.lang.Specification
 
+@MicronautTest
 class MemoryProductStorageSpec extends Specification {
 
-    ProductStorage storage = new MemoryProductStorage()
+	@Inject
+    ProductStorage storage
 
 
 	void "empty storage returns empty list"() {

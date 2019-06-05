@@ -1,8 +1,8 @@
 package projet.gl51.store
 
-import groovy.transform.CompileStatic
+import javax.inject.Singleton
 
-@CompileStatic
+@Singleton
 class MemoryProductStorage implements ProductStorage {
 	
 	private List<Product> products = []
